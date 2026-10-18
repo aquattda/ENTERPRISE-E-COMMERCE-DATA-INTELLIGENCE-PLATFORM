@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Kết nối Shopee, TikTok Shop, API website và Google Sheets. Xem và tải dữ liệu tại một nơi."
+    />
+    <meta name="author" content="Luong Thanh Tuan" />
+    <title>CDIP · Kết nối dữ liệu</title>
+    <link rel="stylesheet" href="/assets/connections.css" />
+    <script type="module" src="/assets/connections.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="CDIP Trang chủ"
+        ><span class="brand-icon">c.</span> cdip<span class="brand-dot"
+          >.</span
+        ></a
+      ><span class="workspace">Không gian kết nối dữ liệu</span
+      ><button class="quiet" id="help-toggle">
+        Hướng dẫn sử dụng <span aria-hidden="true">↗</span>
+      </button>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">DỮ LIỆU CỦA BẠN, KẾT NỐI TẠI ĐÂY</p>
+          <h1>Lấy dữ liệu.<br /><span>Đơn giản hơn.</span></h1>
+          <p class="lead">
+            Kết nối sàn TMĐT, website và Google Sheets.<br />Chọn nguồn, kiểm
+            tra kết nối rồi tải dữ liệu về.
+          </p>
+        </div>
+        <div class="intro-note">
+          <span class="note-icon">↙</span>
+          <p>
+            Một nơi cho các nguồn dữ liệu.<br /><strong
+              >Không cần cài đặt phần mềm.</strong
+            >
+          </p>
+        </div>
+      </section>
+      <section aria-labelledby="source-heading">
+        <div class="section-heading">
+          <h2 id="source-heading">1. Bạn muốn lấy dữ liệu từ đâu?</h2>
+          <span>Chọn một nguồn để bắt đầu</span>
+        </div>
+        <div class="source-grid">
+          <button class="source-card" data-kind="shopee" aria-pressed="false">
+            <span class="source-logo shopee">S</span><strong>Shopee</strong
+            ><span>Thông tin shop & danh sách đơn</span
+            ><span class="source-tag">Open Platform <b>↗</b></span>
+          </button>
+          <button class="source-card" data-kind="tiktok" aria-pressed="false">
+            <span class="source-logo tiktok">♪</span><strong>TikTok Shop</strong
+            ><span>Cửa hàng được cấp quyền & đơn</span
+            ><span class="source-tag">Shop API <b>↗</b></span>
+          </button>
+          <button
+            class="source-card selected"
+            data-kind="website"
+            aria-pressed="true"
+          >
+            <span class="source-logo website">&lt;/&gt;</span
+            ><strong>API website</strong><span>Lấy dữ liệu JSON hoặc CSV</span
+            ><span class="source-tag">REST API <b>↗</b></span>
+          </button>
+          <button class="source-card" data-kind="sheets" aria-pressed="false">
+            <span class="source-logo sheets">▤</span
+            ><strong>Google Sheets</strong><span>Đọc dữ liệu từ bảng tính</span
+            ><span class="source-tag">Google Workspace <b>↗</b></span>
+          </button>
+        </div>
+      </section>
+      <div class="work-grid">
+        <section
+          class="panel connection-panel"
+          aria-labelledby="connection-heading"
+        >
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">THÔNG TIN NGUỒN</p>
+              <h2 id="connection-heading">2. Kết nối API website</h2>
+            </div>
+            <span class="pill" id="connection-status">Chưa kiểm tra</span>
+          </div>
+          <form id="connection-form" autocomplete="off">
+            <div id="source-fields"></div>
+            <details class="advanced">
+              <summary>Đặt tên & tùy chọn dữ liệu</summary>
+              <label for="source-name">Tên nguồn (để tìm lại dễ hơn)</label
+              ><input
+                id="source-name"
+                name="name"
+                maxlength="80"
+                placeholder="Ví dụ: Website công ty"
+              />
+              <div id="path-wrap">
+                <label for="records-path"
+                  >Đường dẫn tới danh sách trong JSON</label
+                ><input
+                  id="records-path"
+                  name="records_path"
+                  maxlength="200"
+                  placeholder="Tự nhận diện · Ví dụ: data.items"
+                /><small
+                  >Để trống để xem phản hồi gốc. Dùng dấu chấm để chọn danh sách
+                  bên trong.</small
+                >
+              </div>
+            </details>
+            <div class="form-actions">
+              <button type="submit" class="primary" id="fetch-button">
+                <span aria-hidden="true">↗</span> Kiểm tra & lấy dữ liệu</button
+              ><button type="button" class="secondary" id="save-button">
+                Lưu mẫu kết nối
+              </button>
+            </div>
+            <p class="privacy">
+              Khóa và token chỉ dùng cho lần gọi này, không lưu vào mẫu kết nối.
+              Dữ liệu trả về không được lưu trên máy chủ.
+            </p>
+            <div id="form-error" role="alert" hidden></div>
+          </form>
+        </section>
+        <aside class="aside">
+          <section class="panel saved-panel">
+            <div class="panel-heading">
+              <h2>Mẫu kết nối của bạn</h2>
+              <span id="saved-count" class="count">0</span>
+            </div>
+            <div id="saved-list"></div>
+            <p class="subtle saved-foot">
+              Lưu trên trình duyệt này. Không lưu token, khóa bí mật hoặc dữ
+              liệu đã lấy.
+            </p>
+          </section>
+          <section class="try-panel">
+            <span class="try-icon">✳</span>
+            <h3>Chưa có API trong tay?</h3>
+            <p>
+              Thử luồng lấy dữ liệu bằng một API mẫu. Khi có thông tin thật, chỉ
+              cần thay nguồn kết nối.
+            </p>
+            <button id="example-button" class="text-button">
+              Thử API mẫu <span aria-hidden="true">→</span>
+            </button>
+          </section>
+        </aside>
+      </div>
+      <section
+        class="panel results"
+        id="results"
+        aria-labelledby="result-heading"
+      >
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">DỮ LIỆU TỪ NGUỒN</p>
+            <h2 id="result-heading">3. Xem & tải dữ liệu</h2>
+          </div>
+          <div id="export-actions" hidden>
+            <button class="secondary" id="export-csv">Tải CSV</button
+            ><button class="secondary" id="export-json">Tải JSON gốc</button>
+          </div>
+        </div>
+        <div id="result-body">
+          <div class="empty">
+            <div class="empty-symbol">⇣</div>
+            <h3>Dữ liệu sẽ xuất hiện ở đây</h3>
+            <p>Chọn nguồn ở trên rồi bấm “Kiểm tra & lấy dữ liệu”.</p>
+          </div>
+        </div>
+      </section>
+      <section id="help" class="panel help-panel" hidden>
+        <div class="panel-heading">
+          <h2>Dùng như thế nào?</h2>
+          <button class="quiet" id="help-close">Đóng</button>
+        </div>
+        <ol>
+          <li>
+            <strong>Chọn nguồn.</strong> Website cần đường dẫn API trả JSON/CSV,
+            không phải liên kết trang bán hàng.
+          </li>
+          <li>
+            <strong>Nhập thông tin được cấp.</strong> Shopee cần Partner ID,
+            Partner key, Shop ID và Access token. TikTok cần App key, App secret
+            và Access token; lấy danh sách shop trước để có Shop cipher.
+          </li>
+          <li>
+            <strong>Google Sheets.</strong> Bảng công khai dùng liên kết đọc;
+            bảng riêng tư dùng Google Access token có quyền đọc. Không cần đổi
+            bảng nội bộ thành công khai.
+          </li>
+          <li>
+            <strong>Lấy dữ liệu và tải tệp.</strong> Mỗi lần lấy một phản hồi,
+            tối đa 1 MB / 5.000 dòng; bảng xem trước tối đa 100 dòng. Với đơn
+            hàng sàn, dùng “Trang tiếp theo”. Với API website, chỉnh tham số
+            phân trang theo tài liệu của nguồn.
+          </li>
+        </ol>
+        <p class="subtle">
+          Mẫu kết nối chưa đồng bộ giữa người dùng. Chưa có cấp quyền OAuth một
+          chạm, tự gia hạn token hoặc lịch đồng bộ nền. Kết nối sàn cần thông
+          tin được công ty/sàn cấp; trang này không tự tạo quyền truy cập API.
+        </p>
+        <div class="help-links">
+          <a
+            href="https://open.shopee.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Shopee Open Platform ↗</a
+          ><a
+            href="https://partner.tiktokshop.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >TikTok Shop Partner Center ↗</a
+          ><a
+            href="https://developers.google.com/workspace/sheets/api/guides/authorizing"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Quyền đọc Google Sheets ↗</a
+          >
+        </div>
+      </section>
+      <footer>
+        <span
+          >cdip. · Kết nối dữ liệu<br />Người tạo:
+          <strong>Luong Thanh Tuan</strong></span
+        ><span>Shopee · TikTok Shop · Website · Google Sheets</span>
+      </footer>
+    </main>
+    <div id="toast" role="status" hidden></div>
+  </body>
+</html>

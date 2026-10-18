@@ -1,0 +1,17 @@
+name: test
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements-lock.txt
+      - run: pip install --no-deps -e .
+      - run: ruff check src apps flows db scripts tests
+      - run: mypy
+      - run: pytest tests/unit -q
+      - run: python scripts/prepare_vercel.py
