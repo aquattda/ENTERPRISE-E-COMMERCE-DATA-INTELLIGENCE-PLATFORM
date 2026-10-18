@@ -1,0 +1,9 @@
+{
+  "name": "ERP orders read replica",
+  "sync_interval_seconds": 120,
+  "config": {
+    "kind": "postgres", "secret_ref": "env:CDIP_SECRET_ERP_DSN",
+    "schema_name": "public", "table": "orders",
+    "fields": ["id", "shop_id", "updated_at", "gross_amount", "currency", "deleted"]
+  }
+}

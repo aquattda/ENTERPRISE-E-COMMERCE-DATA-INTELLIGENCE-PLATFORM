@@ -1,0 +1,63 @@
+const assert=require('node:assert/strict');
+const base=process.env.CDIP_QA_URL||'http://127.0.0.1:8010';
+const {chromium}=require('../../.local/ui-qa/node_modules/playwright');
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.CDIP_BROWSER_PATH||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true});
+ const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ try{
+  await page.goto(base+'/');
+  await page.getByRole('heading',{name:'Tổng quan kinh doanh',exact:true}).waitFor();
+  await page.locator('.demo-banner').waitFor();
+  assert.equal(await page.locator('#business-mode').inputValue(),'demo');
+  assert.equal(await page.locator('input[type=password]').count(),0);
+  await page.screenshot({path:'.local/business-desktop.png',fullPage:true});
+  await page.locator('#sidebar [data-nav=orders]').click();
+  await page.getByRole('heading',{name:'Lãi/lỗ đơn hàng',exact:true}).waitFor();
+  await page.locator('[data-business-line]').first().click();
+  await page.locator('#dialog .business-breakdown').waitFor();
+  assert.match(await page.locator('#dialog').innerText(),/Phí sàn/);
+  await page.getByRole('button',{name:'Đóng',exact:true}).last().click();
+  await page.locator('#sidebar [data-nav=products]').click();
+  await page.getByRole('button',{name:'Thử giá bán'}).click();
+  await page.getByRole('button',{name:'Tính thử'}).click();
+  await page.locator('#simulation-result .notice').waitFor();
+  assert.match(await page.locator('#simulation-result').innerText(),/56.450/);
+  await page.locator('#sim-target_margin_percent').fill('99');
+  await page.getByRole('button',{name:'Tính thử'}).click();
+  await page.getByText('Không có giá khả thi',{exact:false}).waitFor();
+  await page.getByRole('button',{name:'Đóng',exact:true}).last().click();
+  await page.locator('#business-mode').selectOption('company');
+  await page.getByRole('button',{name:'Xem báo cáo',exact:true}).click();
+  await page.getByRole('heading',{name:'Chưa có dữ liệu kinh doanh'}).waitFor();
+  assert.equal(await page.locator('.demo-banner').count(),0);
+  await page.locator('#business-mode').selectOption('demo');
+  await page.locator('#business-channel').selectOption('offline');
+  await page.getByRole('button',{name:'Xem báo cáo',exact:true}).click();
+  await page.locator('.business-table').waitFor();
+  assert.match(await page.locator('.business-table').innerText(),/Đã đủ dữ liệu/);
+  const downloadPromise=page.waitForEvent('download');
+  await page.getByRole('link',{name:'Xuất chi tiết CSV / Excel'}).click();
+  const download=await downloadPromise;
+  assert.equal(download.suggestedFilename(),'profit-report.csv');
+  await page.locator('#business-channel').selectOption('');
+  await page.getByRole('button',{name:'Xem báo cáo',exact:true}).click();
+  await page.locator('#sidebar [data-nav=setup]').click();
+  await page.getByRole('button',{name:'Thêm giá vốn'}).click();
+  await page.locator('#cost-sku').fill('BROWSER-COST');
+  await page.locator('#cost-value').fill('45000');
+  await page.getByRole('button',{name:'Lưu giá vốn',exact:true}).click();
+  await page.getByText('BROWSER-COST',{exact:true}).waitFor();
+  await page.setViewportSize({width:390,height:844});
+  for(const [hash,title] of Object.entries({business:'Tổng quan kinh doanh',orders:'Lãi/lỗ đơn hàng',products:'Sản phẩm / SKU',marketing:'Quảng cáo & khuyến mãi',reconciliation:'Đối soát tiền sàn',setup:'Kết nối dữ liệu & bảng giá vốn'})){
+   await page.goto(base+'/#'+hash);
+   await page.getByRole('heading',{name:title,exact:true}).waitFor();
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,'Overflow '+hash);
+  }
+  await page.goto(base+'/#business');
+  await page.getByRole('heading',{name:'Tổng quan kinh doanh',exact:true}).waitFor();
+  await page.screenshot({path:'.local/business-mobile.png',fullPage:true});
+  assert.deepEqual(errors,[]);
+  console.log('Business demo passed: report modes, order details, pricing simulation, filters, CSV export, cost entry, six mobile pages.');
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

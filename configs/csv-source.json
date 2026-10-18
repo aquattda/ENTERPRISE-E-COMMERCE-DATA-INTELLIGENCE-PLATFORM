@@ -1,0 +1,8 @@
+{
+  "name": "Synthetic employees CSV",
+  "sync_interval_seconds": 300,
+  "config": {
+    "kind": "csv", "entity": "employees", "path": "employees.csv",
+    "key_field": "employee_id", "shop_field": null, "updated_field": null
+  }
+}

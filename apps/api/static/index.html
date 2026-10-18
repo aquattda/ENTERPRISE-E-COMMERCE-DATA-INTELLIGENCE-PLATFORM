@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#123c36" />
+    <title>CDIP · Trung tâm dữ liệu</title>
+    <meta
+      name="description"
+      content="Kết nối nguồn dữ liệu, theo dõi cập nhật và xử lý công việc hằng ngày trong một nơi."
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/app.css" />
+    <link rel="stylesheet" href="/assets/layout.css" />
+    <link rel="stylesheet" href="/assets/business.css" />
+    <script type="module" src="/assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Đến nội dung chính</a>
+    <div id="app-shell" class="app-shell" hidden>
+      <aside id="sidebar" class="sidebar">
+        <a class="brand brand-light" href="#business"
+          ><span class="brand-mark">c<span>·</span></span
+          ><span>cdip<span class="brand-dot">.</span></span></a
+        >
+        <div class="workspace">
+          <span class="workspace-icon" aria-hidden="true">C</span>
+          <div>
+            <strong>Không gian làm việc</strong><span>Lợi nhuận đa kênh</span>
+          </div>
+        </div>
+        <div class="demo-brand-label">BẢN DEMO NGHIỆP VỤ</div>
+        <p class="nav-label">HIỆU QUẢ KINH DOANH</p>
+        <nav aria-label="Điều hướng chính">
+          <a href="#business" data-nav="business"
+            ><span data-icon="grid"></span>Tổng quan kinh doanh</a
+          >
+          <a href="#orders" data-nav="orders"
+            ><span data-icon="file"></span>Lãi/lỗ đơn hàng</a
+          >
+          <a href="#products" data-nav="products"
+            ><span data-icon="sources"></span>Sản phẩm / SKU</a
+          >
+          <a href="#marketing" data-nav="marketing"
+            ><span data-icon="link"></span>Quảng cáo & khuyến mãi</a
+          >
+          <a href="#reconciliation" data-nav="reconciliation"
+            ><span data-icon="check"></span>Đối soát tiền sàn</a
+          >
+          <a href="#setup" data-nav="setup"
+            ><span data-icon="database"></span>Kết nối & giá vốn</a
+          >
+        </nav>
+        <div class="sidebar-bottom">
+          <a href="#guide" data-nav="guide"
+            ><span data-icon="help"></span>Hướng dẫn sử dụng</a
+          >
+          <div class="sidebar-note">
+            <span class="tiny-dot"></span>
+            <div>
+              <strong>Nhẹ thao tác, rõ thông tin</strong>
+              <p>
+                Đủ dữ liệu mới kết luận lãi/lỗ. Bắt đầu từ Kết nối & giá vốn.
+              </p>
+            </div>
+          </div>
+          <div class="account">
+            <span class="avatar">NB</span>
+            <div>
+              <strong>Dùng chung nội bộ</strong
+              ><span>Không gian dữ liệu của đội ngũ</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+      <div class="app-body">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              class="icon-button mobile-menu"
+              id="menu-toggle"
+              aria-label="Mở danh mục"
+              aria-expanded="false"
+              aria-controls="sidebar"
+            >
+              <span data-icon="menu"></span></button
+            ><span class="breadcrumb"
+              >Không gian làm việc <span aria-hidden="true">/</span>
+              <strong id="page-label">Tổng quan</strong></span
+            >
+          </div>
+          <div class="topbar-right">
+            <span id="today" class="today"></span
+            ><a class="help-link" href="#guide"
+              ><span data-icon="help"></span><span>Trợ giúp</span></a
+            >
+          </div>
+        </header>
+        <div
+          id="connection-note"
+          class="connection-note"
+          role="alert"
+          hidden
+        ></div>
+        <main id="main" tabindex="-1">
+          <div class="loading-state" role="status">
+            <span class="spinner"></span>Đang mở không gian làm việc…
+          </div>
+        </main>
+        <footer class="app-footer">
+          <span>CDIP · Trung tâm dữ liệu</span
+          ><span id="last-refreshed"
+            >Thông tin được lấy trực tiếp từ hệ thống</span
+          >
+        </footer>
+      </div>
+    </div>
+    <div id="boot-loading" class="boot-loading" role="status">
+      <span class="spinner"></span>Đang mở không gian làm việc…
+    </div>
+    <dialog id="dialog" class="modal" aria-labelledby="dialog-title"></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <noscript
+      ><p class="noscript">
+        Vui lòng bật JavaScript trong trình duyệt để sử dụng ứng dụng.
+      </p></noscript
+    >
+  </body>
+</html>

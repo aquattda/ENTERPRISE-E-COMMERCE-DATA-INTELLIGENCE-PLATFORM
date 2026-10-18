@@ -1,0 +1,9 @@
+{
+  "name": "Employees Google Sheets",
+  "sync_interval_seconds": 300,
+  "config": {
+    "kind": "sheets", "entity": "employees", "spreadsheet_id": "REPLACE_ME",
+    "ranges": ["Employees!A1:D10000"], "key_field": "employee_id",
+    "secret_ref": "env:CDIP_SECRET_GOOGLE_SERVICE_ACCOUNT", "auth": "service_account"
+  }
+}

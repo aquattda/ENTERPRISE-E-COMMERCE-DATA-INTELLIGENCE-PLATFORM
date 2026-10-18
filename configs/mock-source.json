@@ -1,0 +1,9 @@
+{
+  "name": "Synthetic commerce orders",
+  "sync_interval_seconds": 120,
+  "config": {
+    "kind": "rest", "base_url": "http://mock-api:9000", "path": "/orders",
+    "auth": "none", "batch_size": 500, "lookback_seconds": 300,
+    "webhook_secret_ref": "env:CDIP_SECRET_DEMO_WEBHOOK"
+  }
+}

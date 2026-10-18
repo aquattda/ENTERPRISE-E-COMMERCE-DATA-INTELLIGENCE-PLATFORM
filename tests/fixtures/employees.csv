@@ -1,0 +1,4 @@
+employee_id,name,team_id,active
+e001,Synthetic Employee A,team-1,true
+e002,Synthetic Employee B,team-1,true
+e003,Synthetic Employee C,team-2,true
