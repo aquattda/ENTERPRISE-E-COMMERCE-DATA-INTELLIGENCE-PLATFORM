@@ -1,0 +1,282 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CDIP · Kết nối dữ liệu",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Home",
+        "operationId": "home__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/read": {
+      "post": {
+        "summary": "Read",
+        "operationId": "read_api_sources_read_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sources/example": {
+      "get": {
+        "summary": "Example",
+        "operationId": "example_api_sources_example_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "SourceRequest": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "website",
+              "sheets",
+              "shopee",
+              "tiktok"
+            ],
+            "title": "Kind"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 6000,
+            "title": "Url",
+            "default": ""
+          },
+          "auth": {
+            "type": "string",
+            "enum": [
+              "none",
+              "bearer",
+              "header"
+            ],
+            "title": "Auth",
+            "default": "none"
+          },
+          "token": {
+            "type": "string",
+            "maxLength": 8192,
+            "format": "password",
+            "title": "Token",
+            "default": "",
+            "writeOnly": true
+          },
+          "header_name": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Header Name",
+            "default": "X-API-Key"
+          },
+          "records_path": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Records Path",
+            "default": ""
+          },
+          "sheet_mode": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private"
+            ],
+            "title": "Sheet Mode",
+            "default": "public"
+          },
+          "sheet_range": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Sheet Range",
+            "default": "A1:Z1000"
+          },
+          "gid": {
+            "type": "string",
+            "pattern": "^\\d{1,20}$",
+            "title": "Gid",
+            "default": "0"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "shops",
+              "orders"
+            ],
+            "title": "Operation",
+            "default": "shops"
+          },
+          "app_id": {
+            "type": "string",
+            "maxLength": 160,
+            "title": "App Id",
+            "default": ""
+          },
+          "app_secret": {
+            "type": "string",
+            "maxLength": 8192,
+            "format": "password",
+            "title": "App Secret",
+            "default": "",
+            "writeOnly": true
+          },
+          "shop_id": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Shop Id",
+            "default": ""
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Cursor",
+            "default": ""
+          },
+          "days": {
+            "type": "integer",
+            "maximum": 14.0,
+            "minimum": 1.0,
+            "title": "Days",
+            "default": 7
+          },
+          "until": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 4102444800.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Until"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "SourceRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
